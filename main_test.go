@@ -12,9 +12,9 @@ var a main.App
 
 func TestMain(m *testing.M) {
 	a.Initialize(
-		os.Getenv("APP_DB_USERNAME"),
-		os.Getenv("APP_DB_PASSWORD"),
-		os.Getenv("APP_DB_NAME"),
+		main.GetEnvVal("APP_DB_USERNAME"),
+		main.GetEnvVal("APP_DB_PASSWORD"),
+		main.GetEnvVal("APP_DB_NAME"),
 	)
 
 	ensureTableExists()
@@ -25,7 +25,8 @@ func TestMain(m *testing.M) {
 
 func ensureTableExists() {
 	if _, err := a.DB.Exec(tableCreatinoQuery); err != nil {
-		log.Fatal(err)
+		log.Fatalf("failed execute table creation, err: %v", err)
+		log.Fatal()
 	}
 }
 
@@ -38,6 +39,6 @@ const tableCreatinoQuery = `CREATE TABLE IF NOT EXISTS products
 (
 	id SERIAL,
 	name TEXT NOT NULL,
-	price NUMBERIC(10,2) NOT NULL DEFAULT 0.00
-	CONSTRAINT product_pkey PRIMARY KEY (id)
+	price NUMERIC(10,2) NOT NULL DEFAULT 0.00,
+	CONSTRAINT products_pkey PRIMARY KEY (id)
 )`
